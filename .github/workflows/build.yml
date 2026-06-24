@@ -961,6 +961,26 @@ jobs:
             disable_config CONFIG_ANDROID_PARANOID_NETWORK
           fi
 
+          if [[ "${{ inputs.android_version }}" == "android12" && "${{ inputs.kernel_version }}" == "5.10" ]]; then
+            # 1. 开启用户命名空间（必须）
+            enable_config CONFIG_USER_NS
+            # 2. 关闭安卓严格网络控制（必须）
+            disable_config CONFIG_ANDROID_PARANOID_NETWORK
+            # 其他
+            enable_config CONFIG_NAMESPACES
+            enable_config CONFIG_USER_NS
+            enable_config CONFIG_PID_NS
+            enable_config CONFIG_NET_NS
+            enable_config CONFIG_IPC_NS
+            enable_config CONFIG_UTS_NS
+            enable_config CONFIG_MOUNT_NS
+            enable_config CONFIG_UTS_NS
+            enable_config CONFIG_PROC_FS
+            enable_config CONFIG_FHANDLE
+            enable_config CONFIG_SECCOMP
+            enable_config CONFIG_SECCOMP_FILTER
+          fi
+
       - name: 注入 NTSync 内核配置
         if: inputs.droidspaces != 'off' && inputs.droidspaces_ntsync
         working-directory: ${{ env.KERNEL_ROOT }}/common
